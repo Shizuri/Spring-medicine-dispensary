@@ -3,7 +3,10 @@ package com.z.medicinedispensary.controllers;
 import com.z.medicinedispensary.models.Error;
 import com.z.medicinedispensary.models.NewUseMedicine;
 import com.z.medicinedispensary.models.UseMedicine;
+import com.z.medicinedispensary.services.ReceiveMedicineService;
 import com.z.medicinedispensary.services.UseMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,8 @@ import java.util.List;
 public class UseMedicineController {
 
     private final UseMedicineService service;
+
+    static final private Logger logger = LoggerFactory.getLogger(UseMedicineController.class);
 
     public UseMedicineController(UseMedicineService service) {
         this.service = service;
@@ -29,7 +34,7 @@ public class UseMedicineController {
         try {
             return ResponseEntity.ok().body(service.useMedicine(newUseMedicine));
         }catch (Exception exc){
-            exc.printStackTrace();
+            logger.warn("Found exception [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(new Error(exc.getMessage()));
         }
     }

@@ -4,6 +4,8 @@ import com.z.medicinedispensary.models.Error;
 import com.z.medicinedispensary.models.NewReceiveMedicine;
 import com.z.medicinedispensary.models.ReceiveMedicine;
 import com.z.medicinedispensary.services.ReceiveMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class ReceiveMedicineController {
 
     private final ReceiveMedicineService service;
+
+    static final private Logger logger = LoggerFactory.getLogger(ReceiveMedicineService.class);
 
     public ReceiveMedicineController(ReceiveMedicineService service) {
         this.service = service;
@@ -29,7 +33,7 @@ public class ReceiveMedicineController {
         try {
             return ResponseEntity.ok().body(service.receiveMedicine(newReceiveMedicine));
         }catch (Exception exc){
-            exc.printStackTrace();
+            logger.warn("Found exception [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(new Error(exc.getMessage()));
         }
     }

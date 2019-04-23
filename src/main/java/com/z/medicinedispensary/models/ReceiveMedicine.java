@@ -1,5 +1,6 @@
 package com.z.medicinedispensary.models;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class ReceiveMedicine {
 
     @Column(name = "medicine_name")
     @NotNull
+    @Length(min = 1)
     private String medicineName;
 
     @Column(name = "expiration_date")

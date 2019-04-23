@@ -1,5 +1,7 @@
 package com.z.medicinedispensary.models;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -15,6 +17,7 @@ public class UseMedicine {
 
     @Column(name = "medicine_name")
     @NotNull
+    @Length(min = 1)
     private String medicineName;
 
     @Column(name = "expiration_date")
@@ -23,6 +26,7 @@ public class UseMedicine {
 
     @Column(name = "patient_name")
     @NotNull
+    @Length(min = 1)
     private String patientName;
 
     @Column(name = "date_of_administration")
