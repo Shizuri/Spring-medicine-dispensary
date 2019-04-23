@@ -11,18 +11,18 @@ import java.time.LocalDate;
 public class ReceiveMedicine {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "receive_id")
+    private long receiveId;
 
     @Column(name = "quantity")
     @NotNull
     @Range(min = 0L, max = Long.MAX_VALUE)
     private long quantity;
 
-    @Column(name = "name")
+    @Column(name = "medicine_name")
     @NotNull
-    private String name;
+    private String medicineName;
 
     @Column(name = "expiration_date")
     @NotNull
@@ -31,18 +31,18 @@ public class ReceiveMedicine {
     public ReceiveMedicine() {
     }
 
-    public ReceiveMedicine(@NotNull @Range(min = 0L, max = Long.MAX_VALUE) long quantity, @NotNull String name, @NotNull LocalDate expirationDate) {
+    public ReceiveMedicine(@NotNull @Range(min = 0L, max = Long.MAX_VALUE) long quantity, @NotNull String medicineName, @NotNull LocalDate expirationDate) {
         this.quantity = quantity;
-        this.name = name;
+        this.medicineName = medicineName;
         this.expirationDate = expirationDate;
     }
 
-    public long getId() {
-        return id;
+    public long getReceiveId() {
+        return receiveId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setReceiveId(long receiveId) {
+        this.receiveId = receiveId;
     }
 
     public long getQuantity() {
@@ -53,12 +53,12 @@ public class ReceiveMedicine {
         this.quantity = quantity;
     }
 
-    public String getName() {
-        return name;
+    public String getMedicineName() {
+        return medicineName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMedicineName(String medicineName) {
+        this.medicineName = medicineName;
     }
 
     public LocalDate getExpirationDate() {
@@ -72,9 +72,9 @@ public class ReceiveMedicine {
     @Override
     public String toString() {
         return "ReceiveMedicine{" +
-                "id=" + id +
+                "receiveId=" + receiveId +
                 ", quantity=" + quantity +
-                ", name='" + name + '\'' +
+                ", medicineName='" + medicineName + '\'' +
                 ", expirationDate=" + expirationDate +
                 '}';
     }

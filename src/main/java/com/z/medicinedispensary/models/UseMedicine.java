@@ -9,9 +9,9 @@ import java.time.LocalDate;
 public class UseMedicine {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "use_id")
+    private long useId;
 
     @Column(name = "medicine_name")
     @NotNull
@@ -25,21 +25,25 @@ public class UseMedicine {
     @NotNull
     private String patientName;
 
+    @Column(name = "date_of_administration")
+    private LocalDate dateOfAdministration;
+
     public UseMedicine() {
     }
 
-    public UseMedicine(@NotNull String medicineName, @NotNull LocalDate expirationDate, @NotNull String patientName) {
+    public UseMedicine(@NotNull String medicineName, @NotNull LocalDate expirationDate, @NotNull String patientName, LocalDate dateOfAdministration) {
         this.medicineName = medicineName;
         this.expirationDate = expirationDate;
         this.patientName = patientName;
+        this.dateOfAdministration = dateOfAdministration;
     }
 
-    public long getId() {
-        return id;
+    public long getUseId() {
+        return useId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUseId(long useId) {
+        this.useId = useId;
     }
 
     public String getMedicineName() {
@@ -66,13 +70,22 @@ public class UseMedicine {
         this.patientName = patientName;
     }
 
+    public LocalDate getDateOfAdministration() {
+        return dateOfAdministration;
+    }
+
+    public void setDateOfAdministration(LocalDate dateOfAdministration) {
+        this.dateOfAdministration = dateOfAdministration;
+    }
+
     @Override
     public String toString() {
         return "UseMedicine{" +
-                "id=" + id +
+                "useId=" + useId +
                 ", medicineName='" + medicineName + '\'' +
                 ", expirationDate=" + expirationDate +
                 ", patientName='" + patientName + '\'' +
+                ", dateOfAdministration=" + dateOfAdministration +
                 '}';
     }
 }

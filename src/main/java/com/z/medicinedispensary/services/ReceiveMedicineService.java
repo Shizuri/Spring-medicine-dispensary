@@ -22,8 +22,8 @@ public class ReceiveMedicineService {
     public ReceiveMedicine receiveMedicine (NewReceiveMedicine newReceiveMedicine){
         List<ReceiveMedicine> allMedicine = getAllMedicine();
         for(ReceiveMedicine medicine : allMedicine){
-            if(medicine.getName().equals(newReceiveMedicine.name) && LocalDate.parse(newReceiveMedicine.expirationDate).equals(medicine.getExpirationDate())){
-                receiveMedicineRepository.findById(medicine.getId()).map(x ->{
+            if(medicine.getMedicineName().equals(newReceiveMedicine.name) && LocalDate.parse(newReceiveMedicine.expirationDate).equals(medicine.getExpirationDate())){
+                receiveMedicineRepository.findById(medicine.getReceiveId()).map(x ->{
                     x.setQuantity(x.getQuantity() + newReceiveMedicine.quantity);
                     return x;
                 });
