@@ -37,4 +37,9 @@ public class ReceiveMedicineController {
             return ResponseEntity.badRequest().body(new Error(exc.getMessage()));
         }
     }
+//for testing
+//    @PostMapping("/test")
+//    ReceiveMedicine test1(@RequestBody NewReceiveMedicine newReceiveMedicine){
+//        return service.receiveMedicine2(newReceiveMedicine);
+//    }
 }

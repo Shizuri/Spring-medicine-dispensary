@@ -25,18 +25,23 @@ public class ReceiveMedicineService {
 
     @Transactional
     public ReceiveMedicine receiveMedicine(NewReceiveMedicine newReceiveMedicine) {
-        List<ReceiveMedicine> allMedicine = getAllMedicine();
-        for (ReceiveMedicine medicine : allMedicine) {
-            if (medicine.getMedicineName().equals(newReceiveMedicine.medicineName) && LocalDate.parse(newReceiveMedicine.expirationDate).equals(medicine.getExpirationDate())) {
-                logger.info("Found duplicate [{}], will not add new, increasing quantity.", medicine);
-                receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
-                    x.setQuantity(x.getQuantity() + newReceiveMedicine.quantity);
-                    return x;
-                });
-                return medicine;
-            }
+        // find the medicine in the database
+        ReceiveMedicine medicine = receiveMedicineRepository.findReceiveMedicineByMedicineNameAndExpirationDate
+                (newReceiveMedicine.medicineName, LocalDate.parse(newReceiveMedicine.expirationDate));
+        // if you do find it, increase its quantity
+        if(medicine != null){
+            logger.info("Found duplicate [{}], will not add new, increasing quantity.", medicine);
+            receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
+                x.setQuantity(x.getQuantity() + newReceiveMedicine.quantity);
+                return x;
+            });
+            return medicine;
         }
-        return receiveMedicineRepository.save(new ReceiveMedicine(newReceiveMedicine.quantity, newReceiveMedicine.medicineName, LocalDate.parse(newReceiveMedicine.expirationDate)));
+        //if you don't find it, add it to the database
+        logger.info("Saving to database: [{}]", newReceiveMedicine);
+        return receiveMedicineRepository
+                .save(new ReceiveMedicine(newReceiveMedicine.quantity, newReceiveMedicine.medicineName,
+                        LocalDate.parse(newReceiveMedicine.expirationDate)));
     }
 
 

@@ -27,7 +27,7 @@ public class UseMedicineService {
         this.useMedicineRepository = useMedicineRepository;
     }
 
-    @Transactional
+/*    @Transactional
     public UseMedicine useMedicine(NewUseMedicine newUseMedicine) {
         List<ReceiveMedicine> allMedicine = getAllMedicine();
 
@@ -49,23 +49,40 @@ public class UseMedicineService {
         logger.warn("No such medicine found");
 
         return null;
+    }*/
+
+    @Transactional
+    public UseMedicine useMedicine(NewUseMedicine newUseMedicine) throws Exception {
+        // find medicine in database
+        ReceiveMedicine medicine = receiveMedicineRepository
+                .findReceiveMedicineByMedicineNameAndExpirationDate(newUseMedicine.medicineName,
+                        LocalDate.parse(newUseMedicine.expirationDate));
+        // if there is no such medicine return null
+        if (medicine == null) {
+            logger.warn("No such medicine found");
+            throw new Exception("No such medicine found!");
+        }
+        // check if the medicine has quantity
+        if (medicine.getQuantity() > 0) {
+            logger.info("Using medicine: [{}]", medicine);
+            //reduce the quantity in the storage
+            receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
+                x.setQuantity(x.getQuantity() - 1);
+                return x;
+            });
+            //save use of medicine
+            return useMedicineRepository
+                    .save(new UseMedicine(newUseMedicine.medicineName
+                            , LocalDate.parse(newUseMedicine
+                            .expirationDate), newUseMedicine.patientName
+                            , LocalDate.parse(newUseMedicine.dateOfAdministration)));
+        } else {
+            logger.warn("Not enough quantity for [{}]", medicine);
+            throw new Exception("Not enough quantity for: " + medicine);
+        }
+
     }
 
-    /*    @Transactional
-        public ReceiveMedicine receiveMedicine (NewReceiveMedicine newReceiveMedicine){
-            List<ReceiveMedicine> allMedicine = getAllMedicine();
-            for(ReceiveMedicine medicine : allMedicine){
-                if(medicine.getMedicineName().equals(newReceiveMedicine.medicineName) && LocalDate.parse(newReceiveMedicine.expirationDate).equals(medicine.getExpirationDate())){
-                    receiveMedicineRepository.findById(medicine.getReceiveId()).map(x ->{
-                        x.setQuantity(x.getQuantity() + newReceiveMedicine.quantity);
-                        return x;
-                    });
-                    return medicine;
-                }
-            }
-            return receiveMedicineRepository.save(new ReceiveMedicine(newReceiveMedicine.quantity, newReceiveMedicine.medicineName, LocalDate.parse(newReceiveMedicine.expirationDate)));
-        }
-    */
     public List<ReceiveMedicine> getAllMedicine() {
         return receiveMedicineRepository.findAll();
     }
