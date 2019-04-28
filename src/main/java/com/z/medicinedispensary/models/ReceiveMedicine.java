@@ -1,5 +1,6 @@
 package com.z.medicinedispensary.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -28,6 +29,7 @@ public class ReceiveMedicine {
 
     @Column(name = "expiration_date")
     @NotNull
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate expirationDate;
 
     public ReceiveMedicine() {

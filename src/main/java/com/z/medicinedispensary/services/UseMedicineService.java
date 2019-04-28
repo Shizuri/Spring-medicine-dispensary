@@ -27,30 +27,6 @@ public class UseMedicineService {
         this.useMedicineRepository = useMedicineRepository;
     }
 
-/*    @Transactional
-    public UseMedicine useMedicine(NewUseMedicine newUseMedicine) {
-        List<ReceiveMedicine> allMedicine = getAllMedicine();
-
-        for (ReceiveMedicine medicine : allMedicine) {
-            if (newUseMedicine.medicineName.equals(medicine.getMedicineName()) && LocalDate.parse(newUseMedicine.expirationDate).equals(medicine.getExpirationDate())) {
-                if (medicine.getQuantity() > 0) {
-                    logger.info("Using medicine: [{}]", medicine);
-                    receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
-                        x.setQuantity(x.getQuantity() - 1);
-                        return x;
-                    });
-                    return useMedicineRepository.save(new UseMedicine(newUseMedicine.medicineName, LocalDate.parse(newUseMedicine.expirationDate), newUseMedicine.patientName, LocalDate.parse(newUseMedicine.dateOfAdministration)));
-                } else {
-                    logger.warn("Not enough quantity for [{}]", medicine);
-                    return null;
-                }
-            }
-        }
-        logger.warn("No such medicine found");
-
-        return null;
-    }*/
-
     @Transactional
     public UseMedicine useMedicine(NewUseMedicine newUseMedicine) throws Exception {
         // find medicine in database
