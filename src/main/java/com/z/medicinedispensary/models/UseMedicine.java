@@ -45,6 +45,12 @@ public class UseMedicine {
         this.dateOfAdministration = dateOfAdministration;
     }
 
+    public UseMedicine(@NotNull String medicineName, @NotNull LocalDate expirationDate, @NotNull String patientName) {
+        this.medicineName = medicineName;
+        this.expirationDate = expirationDate;
+        this.patientName = patientName;
+    }
+
     public long getUseId() {
         return useId;
     }

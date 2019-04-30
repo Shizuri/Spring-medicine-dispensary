@@ -41,17 +41,26 @@ public class UseMedicineService {
         // check if the medicine has quantity
         if (medicine.getQuantity() > 0) {
             logger.info("Using medicine: [{}]", medicine);
+            logger.info("Medicine use: [{}]", newUseMedicine);
             //reduce the quantity in the storage
             receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
                 x.setQuantity(x.getQuantity() - 1);
                 return x;
             });
-            //save use of medicine
-            return useMedicineRepository
-                    .save(new UseMedicine(newUseMedicine.medicineName
-                            , LocalDate.parse(newUseMedicine
-                            .expirationDate), newUseMedicine.patientName
-                            , LocalDate.parse(newUseMedicine.dateOfAdministration)));
+            //save use of medicine with dateOfAdministration or without
+            if(!newUseMedicine.dateOfAdministration.isEmpty()){
+                return useMedicineRepository
+                        .save(new UseMedicine(newUseMedicine.medicineName
+                                , LocalDate.parse(newUseMedicine
+                                .expirationDate), newUseMedicine.patientName
+                                ,LocalDate.parse(newUseMedicine.dateOfAdministration)));
+            } else {
+                return useMedicineRepository
+                        .save(new UseMedicine(newUseMedicine.medicineName
+                                , LocalDate.parse(newUseMedicine
+                                .expirationDate), newUseMedicine.patientName));
+            }
+
         } else {
             logger.warn("Not enough quantity for [{}]", medicine);
             throw new Exception("Not enough quantity for: " + medicine);
