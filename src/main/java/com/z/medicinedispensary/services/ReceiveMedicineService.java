@@ -48,4 +48,5 @@ public class ReceiveMedicineService {
     public List<ReceiveMedicine> getAllMedicine() {
         return receiveMedicineRepository.findAll();
     }
+
 }

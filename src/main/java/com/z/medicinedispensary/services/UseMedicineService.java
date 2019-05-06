@@ -47,6 +47,11 @@ public class UseMedicineService {
                 x.setQuantity(x.getQuantity() - 1);
                 return x;
             });
+            //delete from database if that medicine ran out
+            if(medicine.getQuantity() == 0){
+                logger.warn("Quantity is [{}] DELETING [{}]", medicine.getQuantity(),medicine);
+                receiveMedicineRepository.delete(medicine);
+            }
             //save use of medicine with dateOfAdministration or without
             if(!newUseMedicine.dateOfAdministration.isEmpty()){
                 return useMedicineRepository
@@ -63,7 +68,7 @@ public class UseMedicineService {
 
         } else {
             logger.warn("Not enough quantity for [{}]", medicine);
-            throw new Exception("Not enough quantity for: " + medicine);
+            throw new Exception("Not enough quantity for: " + medicine.getMedicineName());
         }
 
     }
