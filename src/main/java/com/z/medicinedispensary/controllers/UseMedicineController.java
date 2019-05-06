@@ -35,7 +35,7 @@ public class UseMedicineController {
             return ResponseEntity.ok().body(service.useMedicine(newUseMedicine));
         }catch (Exception exc){
             logger.warn("Found exception [{}]", exc.getMessage());
-            return ResponseEntity.badRequest().body(new Error(exc.getMessage()));
+            return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }
 }
