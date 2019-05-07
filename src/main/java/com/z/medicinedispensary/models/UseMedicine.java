@@ -32,6 +32,7 @@ public class UseMedicine {
     private String patientName;
 
     @Column(name = "date_of_administration")
+    @NotNull
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate dateOfAdministration;
 
