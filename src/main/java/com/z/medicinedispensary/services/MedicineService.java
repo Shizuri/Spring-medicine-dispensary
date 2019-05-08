@@ -30,7 +30,7 @@ public class MedicineService {
         // if you do find it, increase its quantity
         if(medicine != null){
             logger.info("Found duplicate [{}], will not add new, increasing quantity.", medicine);
-            medicineRepository.findById(medicine.getReceiveId()).map(x -> {
+            medicineRepository.findById(medicine.getId()).map(x -> {
                 x.setQuantity(x.getQuantity() + newMedicine.quantity);
                 return x;
             });
@@ -47,5 +47,9 @@ public class MedicineService {
     public List<Medicine> getAllMedicine() {
         return medicineRepository.findAll();
     }
+
+//    public Medicine deleteMedicine(Long quantity){
+//
+//    }
 
 }

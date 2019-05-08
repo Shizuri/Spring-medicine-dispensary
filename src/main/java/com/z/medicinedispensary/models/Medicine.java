@@ -9,13 +9,13 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "receive_medicine")
+@Table(name = "medicine")
 public class Medicine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "receive_id")
-    private long receiveId;
+    @Column(name = "id")
+    private long id;
 
     @Column(name = "quantity")
     @NotNull
@@ -41,12 +41,12 @@ public class Medicine {
         this.expirationDate = expirationDate;
     }
 
-    public long getReceiveId() {
-        return receiveId;
+    public long getId() {
+        return id;
     }
 
-    public void setReceiveId(long receiveId) {
-        this.receiveId = receiveId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getQuantity() {
@@ -76,7 +76,7 @@ public class Medicine {
     @Override
     public String toString() {
         return "Medicine{" +
-                "receiveId=" + receiveId +
+                "id=" + id +
                 ", quantity=" + quantity +
                 ", medicineName='" + medicineName + '\'' +
                 ", expirationDate=" + expirationDate +

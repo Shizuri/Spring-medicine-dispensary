@@ -43,7 +43,7 @@ public class UseMedicineService {
             logger.info("Using medicine: [{}]", medicine);
             logger.info("Medicine use: [{}]", newUseMedicine);
             //reduce the quantity in the storage
-            medicineRepository.findById(medicine.getReceiveId()).map(x -> {
+            medicineRepository.findById(medicine.getId()).map(x -> {
                 x.setQuantity(x.getQuantity() - 1);
                 return x;
             });
