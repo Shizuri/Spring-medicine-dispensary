@@ -25,10 +25,10 @@ public class MedicineService {
     @Transactional
     public Medicine receiveMedicine(NewMedicine newMedicine) {
         // find the medicine in the database
-        Medicine medicine = medicineRepository.findReceiveMedicineByMedicineNameAndExpirationDate
+        Medicine medicine = medicineRepository.findMedicineByMedicineNameAndExpirationDate
                 (newMedicine.medicineName, LocalDate.parse(newMedicine.expirationDate));
         // if you do find it, increase its quantity
-        if(medicine != null){
+        if (medicine != null) {
             logger.info("Found duplicate [{}], will not add new, increasing quantity.", medicine);
             medicineRepository.findById(medicine.getId()).map(x -> {
                 x.setQuantity(x.getQuantity() + newMedicine.quantity);
@@ -48,8 +48,26 @@ public class MedicineService {
         return medicineRepository.findAll();
     }
 
-//    public Medicine deleteMedicine(Long quantity){
-//
-//    }
+    @Transactional
+    public Medicine deleteMedicine(NewMedicine newMedicine) throws Exception {
+        // find the medicine in the database
+        Medicine medicine = medicineRepository.findMedicineByMedicineNameAndExpirationDate
+                (newMedicine.medicineName, LocalDate.parse(newMedicine.expirationDate));
+        logger.info("medicine is (if null, no such medicine): [{}]", medicine);
+        // no such medicine, throw exception
+        if (medicine == null) {
+            throw new Exception("No such medicine");
+        }
+        // if medicine is found in the database, delete it all if quantity is 0 or more than all
+        if (newMedicine.quantity <= 0 || newMedicine.quantity >= medicine.getQuantity()) {
+            medicineRepository.deleteById(medicine.getId());
+        } else { // else, lower quantity
+            medicineRepository.findById(medicine.getId()).map(res ->{
+               res.setQuantity(res.getQuantity() - newMedicine.quantity);
+               return res;
+            });
+        }
+        return medicine;
+    }
 
 }

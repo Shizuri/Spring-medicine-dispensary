@@ -7,5 +7,5 @@ import java.time.LocalDate;
 
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
-    Medicine findReceiveMedicineByMedicineNameAndExpirationDate(String medicineName, LocalDate expirationDate);
+    Medicine findMedicineByMedicineNameAndExpirationDate(String medicineName, LocalDate expirationDate);
 }

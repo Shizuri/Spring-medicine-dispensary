@@ -31,7 +31,7 @@ public class UseMedicineService {
     public UseMedicine useMedicine(NewUseMedicine newUseMedicine) throws Exception {
         // find medicine in database
         Medicine medicine = medicineRepository
-                .findReceiveMedicineByMedicineNameAndExpirationDate(newUseMedicine.medicineName,
+                .findMedicineByMedicineNameAndExpirationDate(newUseMedicine.medicineName,
                         LocalDate.parse(newUseMedicine.expirationDate));
         // if there is no such medicine return null
         if (medicine == null) {
