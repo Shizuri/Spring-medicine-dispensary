@@ -1,9 +1,9 @@
 package com.z.medicinedispensary.services;
 
 import com.z.medicinedispensary.models.NewUseMedicine;
-import com.z.medicinedispensary.models.ReceiveMedicine;
+import com.z.medicinedispensary.models.Medicine;
 import com.z.medicinedispensary.models.UseMedicine;
-import com.z.medicinedispensary.persistencies.ReceiveMedicineRepository;
+import com.z.medicinedispensary.persistencies.MedicineRepository;
 import com.z.medicinedispensary.persistencies.UseMedicineRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,21 +16,21 @@ import java.util.List;
 @Service
 public class UseMedicineService {
 
-    private final ReceiveMedicineRepository receiveMedicineRepository;
+    private final MedicineRepository medicineRepository;
     private final UseMedicineRepository useMedicineRepository;
 
     static final private Logger logger = LoggerFactory.getLogger(UseMedicineService.class);
 
 
-    public UseMedicineService(ReceiveMedicineRepository receiveMedicineRepository, UseMedicineRepository useMedicineRepository) {
-        this.receiveMedicineRepository = receiveMedicineRepository;
+    public UseMedicineService(MedicineRepository medicineRepository, UseMedicineRepository useMedicineRepository) {
+        this.medicineRepository = medicineRepository;
         this.useMedicineRepository = useMedicineRepository;
     }
 
     @Transactional
     public UseMedicine useMedicine(NewUseMedicine newUseMedicine) throws Exception {
         // find medicine in database
-        ReceiveMedicine medicine = receiveMedicineRepository
+        Medicine medicine = medicineRepository
                 .findReceiveMedicineByMedicineNameAndExpirationDate(newUseMedicine.medicineName,
                         LocalDate.parse(newUseMedicine.expirationDate));
         // if there is no such medicine return null
@@ -43,14 +43,14 @@ public class UseMedicineService {
             logger.info("Using medicine: [{}]", medicine);
             logger.info("Medicine use: [{}]", newUseMedicine);
             //reduce the quantity in the storage
-            receiveMedicineRepository.findById(medicine.getReceiveId()).map(x -> {
+            medicineRepository.findById(medicine.getReceiveId()).map(x -> {
                 x.setQuantity(x.getQuantity() - 1);
                 return x;
             });
             //delete from database if that medicine ran out
             if(medicine.getQuantity() == 0){
                 logger.warn("Quantity is [{}] DELETING [{}]", medicine.getQuantity(),medicine);
-                receiveMedicineRepository.delete(medicine);
+                medicineRepository.delete(medicine);
             }
             //save use of medicine with dateOfAdministration or without
             if(!newUseMedicine.dateOfAdministration.isEmpty()){
@@ -73,8 +73,8 @@ public class UseMedicineService {
 
     }
 
-    public List<ReceiveMedicine> getAllMedicine() {
-        return receiveMedicineRepository.findAll();
+    public List<Medicine> getAllMedicine() {
+        return medicineRepository.findAll();
     }
 
     public List<UseMedicine> getAllUsesOfMedicine() {

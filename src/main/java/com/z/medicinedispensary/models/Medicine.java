@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "receive_medicine")
-public class ReceiveMedicine {
+public class Medicine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,10 @@ public class ReceiveMedicine {
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate expirationDate;
 
-    public ReceiveMedicine() {
+    public Medicine() {
     }
 
-    public ReceiveMedicine(@NotNull @Range(min = 0L, max = Long.MAX_VALUE) long quantity, @NotNull String medicineName, @NotNull LocalDate expirationDate) {
+    public Medicine(@NotNull @Range(min = 0L, max = Long.MAX_VALUE) long quantity, @NotNull String medicineName, @NotNull LocalDate expirationDate) {
         this.quantity = quantity;
         this.medicineName = medicineName;
         this.expirationDate = expirationDate;
@@ -75,7 +75,7 @@ public class ReceiveMedicine {
 
     @Override
     public String toString() {
-        return "ReceiveMedicine{" +
+        return "Medicine{" +
                 "receiveId=" + receiveId +
                 ", quantity=" + quantity +
                 ", medicineName='" + medicineName + '\'' +
