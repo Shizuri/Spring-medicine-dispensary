@@ -1,5 +1,6 @@
 package com.z.medicinedispensary.services;
 
+import com.z.medicinedispensary.models.NewMedicine;
 import com.z.medicinedispensary.models.NewUseMedicine;
 import com.z.medicinedispensary.models.Medicine;
 import com.z.medicinedispensary.models.UseMedicine;
@@ -81,6 +82,7 @@ public class UseMedicineService {
         return useMedicineRepository.findAll();
     }
 
+    @Transactional
     public UseMedicine undoUse(NewUseMedicine newUseMedicine) throws Exception{
         // find the use in the database
         UseMedicine use = this.useMedicineRepository
@@ -98,8 +100,25 @@ public class UseMedicineService {
         }
         // delete use
         useMedicineRepository.deleteById(use.getUseId());
-        // TODO: increase value in medicine stock
-
+        // increase value in medicine stock
+        increaseMedicineByOne(newUseMedicine);
         return use;
+    }
+
+    private void increaseMedicineByOne(NewUseMedicine newUseMedicine) {
+
+        Medicine medicine = medicineRepository.findMedicineByMedicineNameAndExpirationDate(newUseMedicine.medicineName, LocalDate.parse(newUseMedicine.expirationDate));
+        // all medicine was used and deleted from the database, create a new one
+        if (medicine == null) {
+            logger.warn("Medicine was all used up, creating new such item with quantity 1");
+            medicineRepository.save(new Medicine(1L, newUseMedicine.medicineName, LocalDate.parse(newUseMedicine.expirationDate)));
+        }
+        if (medicine != null) {
+            logger.info("Undoing use of medicine [{}]", medicine);
+            medicineRepository.findById(medicine.getId()).map(res ->{
+                res.setQuantity(res.getQuantity() + 1L);
+                return res;
+            });
+        }
     }
 }
