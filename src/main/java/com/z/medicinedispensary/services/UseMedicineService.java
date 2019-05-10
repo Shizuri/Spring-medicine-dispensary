@@ -48,17 +48,17 @@ public class UseMedicineService {
                 return x;
             });
             //delete from database if that medicine ran out
-            if(medicine.getQuantity() == 0){
-                logger.warn("Quantity is [{}] DELETING [{}]", medicine.getQuantity(),medicine);
+            if (medicine.getQuantity() == 0) {
+                logger.warn("Quantity is [{}] DELETING [{}]", medicine.getQuantity(), medicine);
                 medicineRepository.delete(medicine);
             }
             //save use of medicine with dateOfAdministration or without
-            if(!newUseMedicine.dateOfAdministration.isEmpty()){
+            if (!newUseMedicine.dateOfAdministration.isEmpty()) {
                 return useMedicineRepository
                         .save(new UseMedicine(newUseMedicine.medicineName
                                 , LocalDate.parse(newUseMedicine
                                 .expirationDate), newUseMedicine.patientName
-                                ,LocalDate.parse(newUseMedicine.dateOfAdministration)));
+                                , LocalDate.parse(newUseMedicine.dateOfAdministration)));
             } else {
                 return useMedicineRepository
                         .save(new UseMedicine(newUseMedicine.medicineName
@@ -79,5 +79,27 @@ public class UseMedicineService {
 
     public List<UseMedicine> getAllUsesOfMedicine() {
         return useMedicineRepository.findAll();
+    }
+
+    public UseMedicine undoUse(NewUseMedicine newUseMedicine) throws Exception{
+        // find the use in the database
+        UseMedicine use = this.useMedicineRepository
+                .findFirstByMedicineNameAndExpirationDateAndPatientNameAndDateOfAdministration
+                        (
+                                newUseMedicine.medicineName,
+                                LocalDate.parse(newUseMedicine.expirationDate),
+                                newUseMedicine.patientName,
+                                LocalDate.parse(newUseMedicine.dateOfAdministration)
+                        );
+        logger.info("use is (if null, no such use): [{}]", use);
+        // no such medicine, throw exception
+        if (use == null) {
+            throw new Exception("No such use");
+        }
+        // delete use
+        useMedicineRepository.deleteById(use.getUseId());
+        // TODO: increase value in medicine stock
+
+        return use;
     }
 }

@@ -36,4 +36,14 @@ public class UseMedicineController {
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity undoUse(@RequestBody NewUseMedicine newUseMedicine){
+        try {
+            return ResponseEntity.ok().body(service.undoUse(newUseMedicine));
+        }catch (Exception exc){
+            logger.warn("Found exception while undoing use [{}]", exc.getMessage());
+            return ResponseEntity.badRequest().body(exc.getMessage());
+        }
+    }
 }
