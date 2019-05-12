@@ -27,6 +27,11 @@ public class MedicineController {
         return service.getAllMedicine();
     }
 
+    @GetMapping("/alive")
+    public String isAlive(){
+        return "alive";
+    }
+
     @PostMapping
     public ResponseEntity receiveNewMedicine(@RequestBody NewMedicine newMedicine){
         try {
