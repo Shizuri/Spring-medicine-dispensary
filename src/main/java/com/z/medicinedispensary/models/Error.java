@@ -1,5 +1,7 @@
 package com.z.medicinedispensary.models;
 
+//delete, not used anywhere
+
 public class Error {
     private String error;
 
