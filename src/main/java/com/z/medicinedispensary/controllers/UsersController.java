@@ -30,7 +30,7 @@ public class UsersController {
         try{
             return ResponseEntity.ok().body(userService.createUser(newUser));
         } catch (Exception exc){
-            return ResponseEntity.badRequest().body(exc.getMessage());
+            return new ResponseEntity<>(exc.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
