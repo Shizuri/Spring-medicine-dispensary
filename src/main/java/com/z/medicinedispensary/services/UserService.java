@@ -38,20 +38,34 @@ public class UserService {
         }
     }
 
-    public boolean logIn(LoginUser user) {
-
+    public User logIn(LoginUser user) throws Exception{
         User foundUser = userRepository.findFirstByName(user.name);
         if(foundUser == null){
             logger.warn("No such user [{}]", user.name);
-            return false;
+            throw new Exception("No such user");
         } else if(encoder().matches(user.password, foundUser.getPassword())) {
             logger.info("User and password are correct");
-            return true;
+            return foundUser;
         } else {
             logger.warn("User exists but password is wrong!");
-            return false;
+            throw new Exception("User exists but password is wrong");
         }
     }
+
+//    public boolean logIn2(LoginUser user) {
+//
+//        User foundUser = userRepository.findFirstByName(user.name);
+//        if(foundUser == null){
+//            logger.warn("No such user [{}]", user.name);
+//            return false;
+//        } else if(encoder().matches(user.password, foundUser.getPassword())) {
+//            logger.info("User and password are correct");
+//            return true;
+//        } else {
+//            logger.warn("User exists but password is wrong!");
+//            return false;
+//        }
+//    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();

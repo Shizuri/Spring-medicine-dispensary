@@ -16,7 +16,7 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UsersController controller){
         NewUser user = new NewUser();
-        user.name = "Zdravko";
+        user.name = "user";
         user.password = "pass";
         user.role = "ADMIN";
         user.active = true;
