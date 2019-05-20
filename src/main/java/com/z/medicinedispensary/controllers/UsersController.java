@@ -2,6 +2,7 @@ package com.z.medicinedispensary.controllers;
 
 import com.z.medicinedispensary.models.LoginUser;
 import com.z.medicinedispensary.models.NewUser;
+import com.z.medicinedispensary.models.UpdateUser;
 import com.z.medicinedispensary.models.User;
 import com.z.medicinedispensary.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class UsersController {
         this.userService = userService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
@@ -34,7 +35,7 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping()
     public ResponseEntity login(@RequestBody LoginUser loginUser){
         try{
             return ResponseEntity.ok().body(userService.logIn(loginUser));
@@ -48,5 +49,23 @@ public class UsersController {
 ////            return ResponseEntity.status(401).body("Invalid user name or password");
 ////            return ResponseEntity.badRequest().body("Invalid user name or password");
 //        }
+    }
+
+    @DeleteMapping()
+    public ResponseEntity delete(@RequestBody String name){
+        try{
+            return ResponseEntity.ok().body(userService.deleteUser(name));
+        } catch (Exception exc){
+            return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity updateUser(@RequestBody UpdateUser user){
+        try {
+            return ResponseEntity.ok().body(userService.updateUser(user));
+        } catch (Exception exc){
+            return ResponseEntity.badRequest().body(exc.getMessage());
+        }
     }
 }

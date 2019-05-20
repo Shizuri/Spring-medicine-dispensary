@@ -2,6 +2,7 @@ package com.z.medicinedispensary.services;
 
 import com.z.medicinedispensary.models.LoginUser;
 import com.z.medicinedispensary.models.NewUser;
+import com.z.medicinedispensary.models.UpdateUser;
 import com.z.medicinedispensary.models.User;
 import com.z.medicinedispensary.persistencies.UserRepository;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,20 +54,41 @@ public class UserService {
         }
     }
 
-//    public boolean logIn2(LoginUser user) {
-//
-//        User foundUser = userRepository.findFirstByName(user.name);
-//        if(foundUser == null){
-//            logger.warn("No such user [{}]", user.name);
-//            return false;
-//        } else if(encoder().matches(user.password, foundUser.getPassword())) {
-//            logger.info("User and password are correct");
-//            return true;
-//        } else {
-//            logger.warn("User exists but password is wrong!");
-//            return false;
-//        }
-//    }
+    public User deleteUser(String name) throws Exception{
+        User foundUser = userRepository.findFirstByName(name);
+        if(foundUser == null){
+            logger.warn("No such user [{}]", name);
+            throw new Exception("No such user");
+        } else {
+            logger.warn("Deleting user: [{}]", foundUser.getName());
+            try {
+                userRepository.delete(foundUser);
+            }catch (Exception exc){
+                logger.warn("Error during deleting: [{}]", exc.getMessage());
+            }
+            return foundUser;
+        }
+    }
+
+    @Transactional
+    public User updateUser(UpdateUser user) throws Exception{
+        User foundUser = userRepository.findFirstByName(user.name);
+        if(foundUser == null){
+            logger.warn("No such user [{}]", user.name);
+            throw new Exception("No such user");
+        } else {
+            logger.warn("Updating user: [{}]", foundUser);
+            logger.warn("Using values: [{}]", user);
+            try {
+                foundUser.setName(user.name);
+                foundUser.setActive(user.active);
+                foundUser.setRole(user.role);
+            }catch (Exception exc){
+                logger.warn("Error during updating: [{}]", exc.getMessage());
+            }
+            return foundUser;
+        }
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
