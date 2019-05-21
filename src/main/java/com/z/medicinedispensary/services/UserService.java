@@ -80,7 +80,7 @@ public class UserService {
             logger.warn("Updating user: [{}]", foundUser);
             logger.warn("Using values: [{}]", user);
             try {
-                foundUser.setName(user.name);
+                foundUser.setName(user.newName);
                 foundUser.setActive(user.active);
                 foundUser.setRole(user.role);
             }catch (Exception exc){
