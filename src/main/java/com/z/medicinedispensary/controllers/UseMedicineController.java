@@ -32,7 +32,7 @@ public class UseMedicineController {
         try {
             return ResponseEntity.ok().body(service.useMedicine(newUseMedicine));
         }catch (Exception exc){
-            logger.warn("Found exception [{}]", exc.getMessage());
+            logger.warn("|useNewMedicine| Found exception [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }
@@ -42,7 +42,7 @@ public class UseMedicineController {
         try {
             return ResponseEntity.ok().body(service.undoUse(newUseMedicine));
         }catch (Exception exc){
-            logger.warn("Found exception while undoing use [{}]", exc.getMessage());
+            logger.warn("|undoUse| Found exception while undoing use [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }

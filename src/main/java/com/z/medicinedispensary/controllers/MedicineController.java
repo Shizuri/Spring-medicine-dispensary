@@ -37,7 +37,7 @@ public class MedicineController {
         try {
             return ResponseEntity.ok().body(service.receiveMedicine(newMedicine));
         }catch (Exception exc){
-            logger.warn("Found exception on post [{}]", exc.getMessage());
+            logger.warn("|receiveNewMedicine| Found exception on post [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }
@@ -47,13 +47,9 @@ public class MedicineController {
         try {
             return ResponseEntity.ok().body(service.deleteMedicine(newMedicine));
         }catch (Exception exc){
-            logger.warn("Found exception while deleting [{}]", exc.getMessage());
+            logger.warn("|deleteMedicine| Found exception while deleting [{}]", exc.getMessage());
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
     }
-//for testing
-//    @PostMapping("/test")
-//    Medicine test1(@RequestBody NewMedicine newReceiveMedicine){
-//        return service.receiveMedicine2(newReceiveMedicine);
-//    }
+
 }

@@ -1,12 +1,7 @@
 package com.z.medicinedispensary.services;
 
-import com.z.medicinedispensary.models.LoginUser;
-import com.z.medicinedispensary.models.NewUser;
-import com.z.medicinedispensary.models.UpdateUser;
-import com.z.medicinedispensary.models.User;
+import com.z.medicinedispensary.models.*;
 import com.z.medicinedispensary.persistencies.UserRepository;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,10 +27,10 @@ public class UserService {
         //check for duplicates
         User foundUser = userRepository.findFirstByName(newUser.name);
         if (foundUser != null) {
-            logger.warn("User name [{}] already exists", newUser.name);
+            logger.warn("|createUser| User name [{}] already exists", newUser.name);
             throw new Exception("User already exists");
         } else {
-            logger.info("Saving [{}] to repo ", newUser.name);
+            logger.info("|createUser| Saving [{}] to repo ", newUser.name);
             return userRepository.save(new User(newUser.name, encoder().encode(newUser.password), newUser.role, newUser.active));
         }
     }
@@ -43,13 +38,13 @@ public class UserService {
     public User logIn(LoginUser user) throws Exception{
         User foundUser = userRepository.findFirstByName(user.name);
         if(foundUser == null){
-            logger.warn("No such user [{}]", user.name);
+            logger.warn("|logIn| No such user [{}]", user.name);
             throw new Exception("No such user");
         } else if(encoder().matches(user.password, foundUser.getPassword())) {
-            logger.info("User and password are correct");
+            logger.info("|logIn| User and password are correct");
             return foundUser;
         } else {
-            logger.warn("User exists but password is wrong!");
+            logger.warn("|logIn| User exists but password is wrong!");
             throw new Exception("User exists but password is wrong");
         }
     }
@@ -57,14 +52,14 @@ public class UserService {
     public User deleteUser(String name) throws Exception{
         User foundUser = userRepository.findFirstByName(name);
         if(foundUser == null){
-            logger.warn("No such user [{}]", name);
+            logger.warn("|deleteUser| No such user [{}]", name);
             throw new Exception("No such user");
         } else {
-            logger.warn("Deleting user: [{}]", foundUser.getName());
+            logger.warn("|deleteUser| Deleting user: [{}]", foundUser.getName());
             try {
                 userRepository.delete(foundUser);
             }catch (Exception exc){
-                logger.warn("Error during deleting: [{}]", exc.getMessage());
+                logger.warn("|deleteUser| Error during deleting: [{}]", exc.getMessage());
             }
             return foundUser;
         }
@@ -74,20 +69,41 @@ public class UserService {
     public User updateUser(UpdateUser user) throws Exception{
         User foundUser = userRepository.findFirstByName(user.name);
         if(foundUser == null){
-            logger.warn("No such user [{}]", user.name);
+            logger.warn("|updateUser| No such user [{}]", user.name);
             throw new Exception("No such user");
         } else {
-            logger.warn("Updating user: [{}]", foundUser);
-            logger.warn("Using values: [{}]", user);
+            logger.warn("|updateUser| Updating user: [{}]", foundUser);
+            logger.warn("|updateUser| Using values: [{}]", user);
             try {
                 foundUser.setName(user.newName);
                 foundUser.setActive(user.active);
                 foundUser.setRole(user.role);
             }catch (Exception exc){
-                logger.warn("Error during updating: [{}]", exc.getMessage());
+                logger.warn("|updateUser| Error during updating: [{}]", exc.getMessage());
             }
             return foundUser;
         }
+    }
+
+    @Transactional
+    public User changePassword(ChangePassword change) throws Exception{
+        User foundUser = userRepository.findFirstByName(change.name);
+        if(foundUser == null){
+            logger.warn("|changePassword| No such user [{}]", change.name);
+            throw new Exception("No such user");
+        }
+        if(!change.newPassword.equals(change.repeatPassword)){
+            logger.warn("|changePassword| Passwords don't match");
+            throw new Exception("Passwords don't match");
+        }
+        if(encoder().matches(change.oldPassword, foundUser.getPassword())){
+            logger.info("|changePassword| User and password are correct, changing password");
+            foundUser.setPassword(encoder().encode(change.newPassword));
+        } else {
+            logger.warn("|changePassword| Incorrect password");
+            throw new Exception("Incorrect password");
+        }
+        return foundUser;
     }
 
     public List<User> getAllUsers() {

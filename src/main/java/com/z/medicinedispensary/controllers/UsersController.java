@@ -1,9 +1,6 @@
 package com.z.medicinedispensary.controllers;
 
-import com.z.medicinedispensary.models.LoginUser;
-import com.z.medicinedispensary.models.NewUser;
-import com.z.medicinedispensary.models.UpdateUser;
-import com.z.medicinedispensary.models.User;
+import com.z.medicinedispensary.models.*;
 import com.z.medicinedispensary.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +61,15 @@ public class UsersController {
     public ResponseEntity updateUser(@RequestBody UpdateUser user){
         try {
             return ResponseEntity.ok().body(userService.updateUser(user));
+        } catch (Exception exc){
+            return ResponseEntity.badRequest().body(exc.getMessage());
+        }
+    }
+
+    @PutMapping("/change")
+    public ResponseEntity changePassword(@RequestBody ChangePassword change){
+        try {
+            return ResponseEntity.ok().body(userService.changePassword(change));
         } catch (Exception exc){
             return ResponseEntity.badRequest().body(exc.getMessage());
         }
