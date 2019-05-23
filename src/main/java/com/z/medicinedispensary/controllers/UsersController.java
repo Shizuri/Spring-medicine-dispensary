@@ -39,13 +39,6 @@ public class UsersController {
         } catch (Exception exc){
             return new ResponseEntity<>(exc.getMessage(), HttpStatus.UNAUTHORIZED);
         }
-//        if(userService.logIn(loginUser)){
-//            return ResponseEntity.ok().body(true);
-//        } else {
-//            return new ResponseEntity<>("Invalid user name or password", HttpStatus.UNAUTHORIZED);
-////            return ResponseEntity.status(401).body("Invalid user name or password");
-////            return ResponseEntity.badRequest().body("Invalid user name or password");
-//        }
     }
 
     @DeleteMapping()

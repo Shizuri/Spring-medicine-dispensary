@@ -81,6 +81,7 @@ public class UserService {
             }catch (Exception exc){
                 logger.warn("|updateUser| Error during updating: [{}]", exc.getMessage());
             }
+
             return foundUser;
         }
     }

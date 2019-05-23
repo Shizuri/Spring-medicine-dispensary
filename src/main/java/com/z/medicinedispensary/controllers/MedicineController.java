@@ -1,7 +1,7 @@
 package com.z.medicinedispensary.controllers;
 
-import com.z.medicinedispensary.models.NewMedicine;
 import com.z.medicinedispensary.models.Medicine;
+import com.z.medicinedispensary.models.NewMedicine;
 import com.z.medicinedispensary.services.MedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
